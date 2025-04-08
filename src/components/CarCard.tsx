@@ -4,10 +4,11 @@ import { Car } from "@/types/car";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Info } from "lucide-react";
+import { Heart, Info, Car as CarIcon } from "lucide-react";
 import { useCars } from "@/context/CarContext";
 import { formatCurrency } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface CarCardProps {
   car: Car;
@@ -17,6 +18,7 @@ const CarCard = ({ car }: CarCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const { isCarInWishlist, addCarToWishlist, removeCarFromWishlist } = useCars();
   const isInWishlist = isCarInWishlist(car.id);
+  const [imageError, setImageError] = useState(false);
 
   const toggleWishlist = () => {
     if (isInWishlist) {
@@ -28,13 +30,21 @@ const CarCard = ({ car }: CarCardProps) => {
 
   return (
     <>
-      <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg animate-fade-in">
-        <div className="relative h-48 overflow-hidden">
-          <img 
-            src={car.imageUrl} 
-            alt={`${car.brand} ${car.model}`} 
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          />
+      <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg animate-fade-in h-full flex flex-col">
+        <div className="relative h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
+          {!imageError ? (
+            <img 
+              src={car.imageUrl} 
+              alt={`${car.brand} ${car.model}`} 
+              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full w-full bg-slate-100">
+              <CarIcon className="h-16 w-16 text-muted-foreground mb-2" />
+              <p className="text-sm text-muted-foreground">{car.brand} {car.model}</p>
+            </div>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -46,7 +56,7 @@ const CarCard = ({ car }: CarCardProps) => {
             <Heart className={isInWishlist ? "fill-carred" : ""} size={18} />
           </Button>
         </div>
-        <CardContent className="pt-4">
+        <CardContent className="pt-4 flex-1">
           <div className="flex justify-between items-start mb-2">
             <div>
               <h3 className="font-semibold text-lg">{car.brand} {car.model}</h3>
@@ -56,12 +66,18 @@ const CarCard = ({ car }: CarCardProps) => {
               {car.fuelType}
             </Badge>
           </div>
+          <div className="flex flex-wrap justify-between gap-2 mt-3">
+            <div className="text-xs px-2 py-1 bg-slate-100 rounded-md">{car.transmission}</div>
+            <div className="text-xs px-2 py-1 bg-slate-100 rounded-md">{car.engineSize}</div>
+            <div className="text-xs px-2 py-1 bg-slate-100 rounded-md">{car.seatingCapacity} seats</div>
+            <div className="text-xs px-2 py-1 bg-slate-100 rounded-md">{car.color}</div>
+          </div>
           <div className="flex justify-between items-center mt-3">
             <p className="font-bold text-lg text-carblue">{formatCurrency(car.price)}</p>
-            <div className="text-sm text-muted-foreground">{car.seatingCapacity} seats</div>
+            <div className="text-sm text-muted-foreground">{car.mileage.toLocaleString()} mi</div>
           </div>
         </CardContent>
-        <CardFooter className="pt-0">
+        <CardFooter className="pt-0 mt-auto">
           <Button 
             variant="outline" 
             className="w-full"
@@ -81,13 +97,22 @@ const CarCard = ({ car }: CarCardProps) => {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
-            <div className="relative h-56 overflow-hidden rounded-md">
-              <img
-                src={car.imageUrl}
-                alt={`${car.brand} ${car.model}`}
-                className="w-full h-full object-cover"
-              />
+            <div className="relative h-56 overflow-hidden rounded-md bg-slate-100 flex items-center justify-center">
+              {!imageError ? (
+                <img
+                  src={car.imageUrl}
+                  alt={`${car.brand} ${car.model}`}
+                  className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full w-full">
+                  <CarIcon className="h-20 w-20 text-muted-foreground mb-2" />
+                  <p className="text-sm text-muted-foreground">{car.brand} {car.model}</p>
+                </div>
+              )}
             </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium">Price</p>

@@ -47,14 +47,14 @@ const Filters = () => {
       <div className="space-y-2">
         <Label htmlFor="brand">Brand</Label>
         <Select
-          value={filters.brand || ""}
-          onValueChange={(value) => setFilters({ brand: value })}
+          value={filters.brand || "all-brands"}
+          onValueChange={(value) => setFilters({ brand: value === "all-brands" ? "" : value })}
         >
           <SelectTrigger id="brand">
             <SelectValue placeholder="All Brands" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Brands</SelectItem>
+            <SelectItem value="all-brands">All Brands</SelectItem>
             {brands.map((brand) => (
               <SelectItem key={brand} value={brand}>
                 {brand}
@@ -86,14 +86,14 @@ const Filters = () => {
       <div className="space-y-2">
         <Label htmlFor="fuelType">Fuel Type</Label>
         <Select
-          value={filters.fuelType || ""}
-          onValueChange={(value) => setFilters({ fuelType: value })}
+          value={filters.fuelType || "all-fuel-types"}
+          onValueChange={(value) => setFilters({ fuelType: value === "all-fuel-types" ? "" : value })}
         >
           <SelectTrigger id="fuelType">
             <SelectValue placeholder="All Fuel Types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Fuel Types</SelectItem>
+            <SelectItem value="all-fuel-types">All Fuel Types</SelectItem>
             {fuelTypes.map((fuel) => (
               <SelectItem key={fuel} value={fuel}>
                 {fuel}
@@ -106,14 +106,14 @@ const Filters = () => {
       <div className="space-y-2">
         <Label htmlFor="seatingCapacity">Seating Capacity</Label>
         <Select
-          value={filters.seatingCapacity ? String(filters.seatingCapacity) : ""}
-          onValueChange={(value) => setFilters({ seatingCapacity: value ? Number(value) : 0 })}
+          value={filters.seatingCapacity ? String(filters.seatingCapacity) : "any-capacity"}
+          onValueChange={(value) => setFilters({ seatingCapacity: value === "any-capacity" ? 0 : Number(value) })}
         >
           <SelectTrigger id="seatingCapacity">
             <SelectValue placeholder="Any Capacity" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any Capacity</SelectItem>
+            <SelectItem value="any-capacity">Any Capacity</SelectItem>
             {seatingCapacities.map((seats) => (
               <SelectItem key={seats} value={String(seats)}>
                 {seats} Seats
@@ -126,14 +126,14 @@ const Filters = () => {
       <div className="space-y-2">
         <Label htmlFor="sortBy">Sort By</Label>
         <Select
-          value={filters.sortBy || ""}
-          onValueChange={(value) => setFilters({ sortBy: value })}
+          value={filters.sortBy || "default"}
+          onValueChange={(value) => setFilters({ sortBy: value === "default" ? "" : value })}
         >
           <SelectTrigger id="sortBy">
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Default</SelectItem>
+            <SelectItem value="default">Default</SelectItem>
             <SelectItem value="price-low-high">Price: Low to High</SelectItem>
             <SelectItem value="price-high-low">Price: High to Low</SelectItem>
           </SelectContent>
